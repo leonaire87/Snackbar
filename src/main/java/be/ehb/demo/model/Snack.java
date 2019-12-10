@@ -20,7 +20,7 @@ public class Snack {
     @NotNull
     private String name;
 
-    @NotBlank
+
     @NotNull
     @DecimalMin(value = "0.5")
     private BigDecimal price;

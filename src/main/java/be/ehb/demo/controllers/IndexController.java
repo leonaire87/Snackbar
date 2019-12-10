@@ -5,9 +5,13 @@ import be.ehb.demo.model.SnackDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.naming.Binding;
+import javax.validation.Valid;
 
 @Controller
 public class IndexController {
@@ -20,8 +24,23 @@ public class IndexController {
         return dao.findAll();
     }
 
+    @ModelAttribute(value = "nieuweSnack")
+    public Snack snackToSave(){
+        return new Snack();
+    }
+
+
+
     @RequestMapping(value = {"", "/","/index"}, method = RequestMethod.GET)
     public String  showIndex(ModelMap map){
         return "index";
+    }
+
+    @RequestMapping(value = {"", "/","/index"}, method = RequestMethod.POST)
+    public String saveSnack(@ModelAttribute("nieuweSnack") @Valid Snack nieuweSnack, BindingResult bindingResult){
+        if (bindingResult.hasErrors())
+            return "index";
+        dao.save(nieuweSnack);
+        return "redirect:/index";
     }
 }
